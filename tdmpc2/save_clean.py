@@ -17,7 +17,7 @@ from tdmpc2 import TDMPC2
 from tqdm import tqdm
 torch.backends.cudnn.benchmark = True
 
-data_root="/data3/seongwoongjo/DATA_DMC_RANDOMACTION_ACTIONMASK"
+data_root="/data3/seongwoongjo/DATA_DMC_CLEAN"
 
 @hydra.main(config_name='config', config_path='.')
 def save(cfg: dict):
@@ -66,10 +66,8 @@ def save(cfg: dict):
         raw_obses_seed = {}
         obses_seed = []
         ep_actions_seed = []
-        ep_actions_mask_seed = []
         states_seed = []
         ep_rewards_seed = []
-        rand_prob = 0.1
         for i in tqdm(range(cfg.eval_episodes)):
             raw_obses, obses, ep_actions, ep_actions_mask, ep_rewards, ep_successes, states = {}, [], [], [], [], [], []
             obs, done, ep_reward, t = env.reset(task_idx=task_idx), False, 0, 0 # (C,), False, 0, 0
@@ -94,17 +92,7 @@ def save(cfg: dict):
 
             while not done:
                 action = agent.act(obs, t0=t==0, task=task_idx)
-                # do random action
-                if np.random.uniform() < rand_prob:
-                    action_mask = 0
-                    action_ = torch.rand_like(action) * 2 - 1
-                else:
-                    action_mask = 1
-                    if cfg.seed == 0: # which will be used as a support data
-                        action_ = action 
-                    else:
-                        action_ = (action + torch.rand_like(action) * 0.1).clamp(-1, 1)
-                obs, reward, done, info = env.step(action_)
+                obs, reward, done, info = env.step(action)
                 
                 t += 1
                 try:
@@ -123,7 +111,6 @@ def save(cfg: dict):
 
                 obses.append(obs)
                 ep_actions.append(action)
-                ep_actions_mask.append(action_mask)
                 ep_rewards.append(ep_reward)
                 ep_successes.append(info['success'])
                 states.append(state) 
@@ -135,7 +122,6 @@ def save(cfg: dict):
             obses_seed.append(torch.stack(obses))
             states_seed.append(torch.from_numpy(np.stack(states)))
             ep_actions_seed.append(torch.stack(ep_actions))
-            ep_actions_mask_seed.append(torch.tensor(ep_actions_mask))
             ep_rewards_seed.append(torch.tensor(ep_rewards))
 
             # torch.save((raw_obses, obses, ep_actions, ep_rewards, ep_successes), f'{save_dir}/demo_{i}-obs.pt')
@@ -147,14 +133,12 @@ def save(cfg: dict):
         obses_seed = torch.stack(obses_seed)
         states_seed = torch.stack(states_seed)
         ep_actions_seed = torch.stack(ep_actions_seed)
-        ep_actions_mask_seed = torch.stack(ep_actions_mask_seed)
         ep_rewards_seed = torch.stack(ep_rewards_seed)
 
         torch.save(raw_obses_seed, f'{save_dir}/rawobs.pt')
         torch.save(states_seed, f'{save_dir}/states.pt')
         torch.save(obses_seed, f'{save_dir}/obs.pt')
         torch.save(ep_actions_seed, f'{save_dir}/action.pt')
-        torch.save(ep_actions_mask_seed, f'{save_dir}/action_mask.pt')
         torch.save(ep_rewards_seed, f'{save_dir}/rewards.pt')
         
 

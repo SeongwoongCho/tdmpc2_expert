@@ -27,6 +27,9 @@ discount_max: 0.995
 buffer_size: 1_000_000
 exp_name: default
 data_dir: ???
+data_root: ???
+rand_prob: ???
+noise_sigma: ???
 
 # planning
 mpc: true
