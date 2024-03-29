@@ -35,9 +35,12 @@ def get_acted_action(expert_action, rand_prob, noise_sigma):
     if np.random.uniform() < rand_prob or rand_prob == 1:
         acted_action = torch.rand_like(expert_action) * 2 - 1
     else:
-        noise = torch.ones_like(expert_action)
-        torch.nn.init.trunc_normal_(noise, mean=0, std=noise_sigma, a=-1, b=1)
-        acted_action = (expert_action + noise).clamp(-1, 1)
+        if noise_sigma == 0:
+            acted_action = expert_action.clone()
+        else:
+            noise = torch.ones_like(expert_action)
+            torch.nn.init.trunc_normal_(noise, mean=0, std=noise_sigma, a=-1, b=1)
+            acted_action = (expert_action + noise).clamp(-1, 1)
     return acted_action
 
 
