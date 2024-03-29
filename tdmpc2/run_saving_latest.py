@@ -82,7 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_procs', type=int)
     parser.add_argument('--pid', type=int)
     parser.add_argument('--debug_mode', '-debug', action='store_true', default=False)
-    parser.add_argumnet('--include', type=str, default='walker')
+    parser.add_argument('--include', type=str, default='walker')
     args = parser.parse_args()
     
     if args.debug_mode:
