@@ -49,9 +49,9 @@ def save(cfg: dict):
     data_root = cfg.data_root
     
     os.makedirs(f"{data_root}", exist_ok=True)
-    os.makedirs(f"{data_root}/{cfg.cur_task.replace('cup', 'ball_in_cup')}", exist_ok=True)
-    os.makedirs(f"{data_root}/{cfg.cur_task.replace('cup', 'ball_in_cup')}/{cfg.seed}", exist_ok=True)
-    save_dir = f"{data_root}/{cfg.cur_task.replace('cup', 'ball_in_cup')}/{cfg.seed}"
+    os.makedirs(f"{data_root}/{cfg.cur_task.replace('cup', 'ball_in_cup').replace('_', '-')}", exist_ok=True)
+    os.makedirs(f"{data_root}/{cfg.cur_task.replace('cup', 'ball_in_cup').replace('_', '-')}/{cfg.seed}", exist_ok=True)
+    save_dir = f"{data_root}/{cfg.cur_task.replace('cup', 'ball_in_cup').replace('_', '-')}/{cfg.seed}"
     
     set_seed(cfg.seed)
     print(colored(f'Task: {cfg.task}', 'blue', attrs=['bold']))
