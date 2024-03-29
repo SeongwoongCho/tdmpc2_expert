@@ -48,7 +48,7 @@ ALL_TASKS = [
     "pendulum-spin",
     "pendulum-swingup",
     # >>
-    "pointmass-easy"   
+    "pointmass-easy",  
     # >> 
     "quadruped-run",
     "quadruped-walk",
