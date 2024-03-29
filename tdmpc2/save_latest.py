@@ -17,8 +17,6 @@ from tdmpc2 import TDMPC2
 from tqdm import tqdm
 torch.backends.cudnn.benchmark = True
 
-# data_root="/data3/seongwoongjo/DATA_DMC_RANDOMACTION_ACTIONMASK"
-
 def get_raw_obs(env):
     try:
         raw_obs = env.unwrapped._env._env._env._env.task.get_observation(env.unwrapped._env._env._env._env.physics) # np.ndarray with shape (,) or (C, )
@@ -37,7 +35,9 @@ def get_acted_action(expert_action, rand_prob, noise_sigma):
     if np.random.uniform() < rand_prob or rand_prob == 1:
         acted_action = torch.rand_like(expert_action) * 2 - 1
     else:
-        acted_action = (expert_action + torch.randn_like(expert_action) * noise_sigma).clamp(-1, 1)
+        noise = torch.ones_like(expert_action)
+        torch.nn.init.trunc_normal_(noise, mean=0, std=noise_sigma, a=-1, b=1)
+        acted_action = (expert_action + noise).clamp(-1, 1)
     return acted_action
 
 
