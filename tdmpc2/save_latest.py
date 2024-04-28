@@ -71,7 +71,6 @@ def save(cfg: dict):
     agent = TDMPC2(cfg)
     assert os.path.exists(cfg.checkpoint), f'Checkpoint {cfg.checkpoint} not found! Must be a valid filepath.'
     agent.load(cfg.checkpoint)
-	
 	# Evaluate
     if cfg.multitask:
         print(colored(f'Evaluating agent on {len(cfg.tasks)} tasks:', 'yellow', attrs=['bold']))
@@ -115,7 +114,7 @@ def save(cfg: dict):
             successes_ep.append(0.)
 
             while not done:
-                expert_action = agent.act(obs, t0=t==0, task=task_idx)
+                expert_action = agent.act(obs, t0=t==0, eval_mode=True, task=task_idx)
                 acted_action = get_acted_action(expert_action, rand_prob, noise_sigma)
                 obs, reward, done, info = env.step(acted_action)
                 

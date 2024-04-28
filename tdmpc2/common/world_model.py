@@ -131,7 +131,7 @@ class WorldModel(nn.Module):
 		# Gaussian policy prior
 		mu, log_std = self._pi(z).chunk(2, dim=-1)
 		log_std = math.log_std(log_std, self.log_std_min, self.log_std_dif)
-		eps = torch.randn_like(mu)
+		eps = torch.zeros_like(mu)
 
 		if self.cfg.multitask: # Mask out unused action dimensions
 			mu = mu * self._action_masks[task]
@@ -167,6 +167,6 @@ class WorldModel(nn.Module):
 		if return_type == 'all':
 			return out
 
-		Q1, Q2 = out[np.random.choice(self.cfg.num_q, 2, replace=False)]
+		Q1, Q2 = out[np.array([0, 1])]
 		Q1, Q2 = math.two_hot_inv(Q1, self.cfg), math.two_hot_inv(Q2, self.cfg)
 		return torch.min(Q1, Q2) if return_type == 'min' else (Q1 + Q2) / 2

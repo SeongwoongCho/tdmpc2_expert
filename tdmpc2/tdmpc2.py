@@ -50,7 +50,7 @@ class TDMPC2:
         if self.cfg.mpc:
             a = self.plan(z, t0=t0, eval_mode=eval_mode, task=task)
         else:
-            a = self.model.pi(z, task)[int(not eval_mode)][0]
+            a = self.model.pi(z, task, eval_mode=eval_mode)[int(not eval_mode)][0]
         return a.cpu()
 
     @torch.no_grad()
@@ -87,9 +87,13 @@ class TDMPC2:
 	
 		# Iterate MPPI
         for _ in range(self.cfg.iterations):
-            actions[:, self.cfg.num_pi_trajs:] = (mean.unsqueeze(1) + std.unsqueeze(1) * \
+            if not eval_mode:
+                actions[:, self.cfg.num_pi_trajs:] = (mean.unsqueeze(1) + std.unsqueeze(1) * \
                     torch.randn(self.cfg.horizon, self.cfg.num_samples-self.cfg.num_pi_trajs, self.cfg.action_dim, device=std.device)) \
                     .clamp(-1, 1)
+            else:
+                actions[:, self.cfg.num_pi_trajs:] = mean.unsqueeze(1).clamp(-1, 1)
+
             if self.cfg.multitask:
                 actions = actions * self.model._action_masks[task]
 
@@ -111,7 +115,10 @@ class TDMPC2:
 
 		# Select action
         score = score.squeeze(1).cpu().numpy()
-        actions = elite_actions[:, np.random.choice(np.arange(score.shape[0]), p=score)]
+        if not eval_mode:
+            actions = elite_actions[:, np.random.choice(np.arange(score.shape[0]), p=score)]
+        else:
+            actions = elite_actions[:, np.argmax(score)]
         self._prev_mean = mean
         a, std = actions[0], std[0]
         if not eval_mode:

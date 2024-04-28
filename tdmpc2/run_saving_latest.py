@@ -3,6 +3,12 @@ import sys
 import subprocess
 
 ALL_TASKS = [
+    
+    "acrobot-swingup",
+    "finger-spin",
+    "cartpole-three_poles",
+    "pendulum-swingup",
+    
     # >> 
     "walker-run",
     "walker-run-backwards", 
@@ -10,61 +16,57 @@ ALL_TASKS = [
     "walker-walk",
     "walker-walk-backwards",  
     # >> 
-    "acrobot-swingup",
-    # >> 
-    "cartpole-balance", 
+    # "cartpole-balance", 
     "cartpole-swingup",
     "cartpole-two_poles",
-    "cartpole-three_poles",
+
     # >>
     "cheetah-jump",
     "cheetah-run",
     "cheetah-run-back",
     "cheetah-run-backwards",
     "cheetah-run-front",
-    # >> 
-    "cup-catch",
-    "cup-spin",
-    # >>
-    "dog-run",
-    "dog-stand",
-    "dog-trot",
-    "dog-walk",
-    # >> 
-    "finger-spin",
-    "finger-turn-easy",
-    "finger-turn-hard",
-    # >> 
-    "fish-swim",
+    # # >> 
+    # "cup-catch",
+    # "cup-spin",
+    # # >>
+    # "dog-run",
+    # "dog-stand",
+    # "dog-trot",
+    # "dog-walk",
+    # # >> 
+    # "finger-turn-easy",
+    # "finger-turn-hard",
+    # # >> 
+    # "fish-swim",
     # >>
     "hopper-hop",
     "hopper-hop-backwards",
     "hopper-stand",
-    # >>
-    "humanoid-run",
-    "humanoid-stand",
-    "humanoid-walk",
+    # # >>
+    # "humanoid-run",
+    # "humanoid-stand",
+    # "humanoid-walk",
     # >> 
-    "pendulum-spin",
-    "pendulum-swingup",
+    # "pendulum-spin",
+    # # >>
+    # "pointmass-easy",  
+    # # >> 
+    # "quadruped-run",
+    # "quadruped-walk",
+    # # >> 
+    # "reacher-easy",
+    # "reacher-hard",
+    # "reacher-three-easy",
+    # "reacher-three-hard",
+    # # >>
+    # "swimmer-swimmer6",
+    # "swimmer-swimmer15",
     # >>
-    "pointmass-easy",  
-    # >> 
-    "quadruped-run",
-    "quadruped-walk",
-    # >> 
-    "reacher-easy",
-    "reacher-hard",
-    "reacher-three-easy",
-    "reacher-three-hard",
+    # "manipulator-bring_ball",
     # >>
-    "swimmer-swimmer6",
-    "swimmer-swimmer15",
-    # >>
-    "manipulator-bring_ball",
-    # >>
-    "manipulator3d-reach_duplo_features",
-    "manipulator3d-reach_site_features",
+    # "manipulator3d-reach_duplo_features",
+    # "manipulator3d-reach_site_features",
 ]
 
 if __name__ == '__main__':
